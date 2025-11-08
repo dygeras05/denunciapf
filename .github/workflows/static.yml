@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        /* Imagem e texto lado a lado */
+        .lado-a-lado {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .lado-a-lado img {
+            width: 300px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        /* Container para as duas imagens com textos */
+        .duas-imagens-texto {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .duas-imagens-texto .item {
+            width: 48%;
+            text-align: center;
+        }
+
+        .duas-imagens-texto img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .duas-imagens-texto p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quem Somos</h1>
+
+    <!-- Imagem à esquerda e texto à direita -->
+    <div class="lado-a-lado">
+        <img src="https://i.imgur.com/JSBana8.jpeg" alt="Imagem esquerda">
+        <p>
+           Quem Somos?
+
+           Somos uma  Delegacia de Policia Federal no FiveM!
+Nosso propósito é recriar, de forma fiel e imersiva, o trabalho da Polícia Federal Brasileira, com base em seus valores, hierarquia e procedimentos operacionais. Buscamos oferecer uma experiência autêntica para todos os participantes, valorizando o trabalho em equipe, a conduta ética e o respeito às diretrizes do RP sério.
+Ressaltamos que nossa unidade é totalmente independente e sem qualquer vínculo institucional real com a Polícia Federal.Nosso compromisso é com a simulação responsável, o aprendizado e o entretenimento de qualidade, mostrando o que há de melhor na atuação policial dentro do ambiente virtual.
+        </p>
+    </div>
+
+    <!-- Duas imagens lado a lado, cada uma com texto -->
+    <div class="duas-imagens-texto">
+        <div class="item">
+            <img src="https://i.imgur.com/D1r7p1M.jpeg" alt="Imagem 1">
+            <p>Texto explicativo da primeira imagem.</p>
+        </div>
+        <div class="item">
+            <img src="images/exemplo3.png" alt="Imagem 2">
+            <p>Texto explicativo da segunda imagem.</p>
+        </div>
+    </div>
+
+</body>
+</html>
