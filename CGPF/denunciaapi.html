@@ -1,0 +1,442 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corregedoria – APF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f4f7;
+            color: #0b2540;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            text-align: center;
+            background-color: #061a2b;
+            padding: 20px 0;
+        }
+        
+        header img {
+            width: 120px;
+        }
+        
+        header h1 {
+            color: #d4af37;
+            margin-top: 10px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        p {
+            text-align: center;
+        }
+        
+        .blocos {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .bloco {
+            background-color: #ffffff;
+            flex: 1;
+            min-width: 280px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .bloco h2 {
+            margin-top: 0;
+            color: #061a2b;
+        }
+        
+        .bloco p {
+            margin: 10px 0 20px 0;
+        }
+        
+        .bloco button {
+            background-color: #d4af37;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .bloco button:hover {
+            background-color: #b8932c;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        
+        textarea {
+            resize: vertical;
+        }
+        
+        #resultado,
+        #codigoGerado {
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .status-em-analise {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-concluido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 15px;
+            background-color: #061a2b;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="https://i.imgur.com/YCT5FTS.png" alt="Brasão da Polícia Federal">
+        <h1>Corregedoria-Geral da Polícia Federal - CGPF</h1>
+    </header>
+
+    <div class="container">
+        <p>A CGPF supervisiona condutas de servidores, garante a disciplina interna e trata denúncias com sigilo e imparcialidade.</p>
+
+        <div class="blocos">
+            <div class="bloco">
+                <h2>Registrar Denúncia</h2>
+                <form id="registrarDenunciaForm">
+                    <input type="text" id="NomeRG" placeholder="Seu nome e RG" required><br>
+                    <input type="text" id="numero" placeholder="Número de celular" required><br>
+                    <textarea id="descricao" rows="4" placeholder="Descrição da denúncia" required></textarea><br>
+                    <textarea id="provas" rows="2" placeholder="Links das Provas (YouTube, Drive, etc)" required></textarea><br>
+                    <button type="submit">Enviar Denúncia</button>
+                </form>
+                <p id="codigoGerado"></p>
+            </div>
+
+            <div class="bloco">
+                <h2>Consultar Status</h2>
+                <form id="consultaDenuncia">
+                    <input type="text" id="codigoConsulta" placeholder="Código da Denúncia" required><br>
+                    <button type="submit">Consultar Status</button>
+                </form>
+                <p id="resultado"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Agência de Polícia Federal — CGPF
+    </footer>
+
+    <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbweBCNj2wkfoVVDpBfppVTtQ4jTHJ_naRk-KDT5yA6hjNx9BstmUWJ8D-wQQQNEMQoW/exec";
+
+        // Enviar denúncia
+        document.getElementById("registrarDenunciaForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            const codigo = "DEN-" + Date.now();
+            const data = new Date().toLocaleString("pt-PT");
+
+            fetch(scriptURL, {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        "Código": codigo,
+                        "Nome": document.getElementById("NomeRG").value,
+                        "Numero": document.getElementById("numero").value,
+                        "Descrição": document.getElementById("descricao").value,
+                        "Provas": document.getElementById("provas").value,
+                        "Status": "Em análise",
+                        "Data": data
+                    })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        document.getElementById("codigoGerado").textContent = "Denúncia enviada com sucesso! Código: " + codigo;
+                        document.getElementById("registrarDenunciaForm").reset();
+                    } else throw new Error("Erro ao enviar");
+                })
+                .catch(() => alert("Erro ao enviar a denúncia. Verifique a ligação ou tente novamente."));
+        });
+
+        // Consultar status
+        document.getElementById("consultaDenuncia").addEventListener("submit", e => {
+            e.preventDefault();
+            const codigo = document.getElementById("codigoConsulta").value.trim().toUpperCase();
+            const resultado = document.getElementById("resultado");
+            resultado.textContent = "A consultar...";
+
+            fetch(scriptURL + "?codigo=" + codigo)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.status) {
+                        resultado.textContent = "Status da denúncia: " + data.status;
+                        resultado.className = data.status === "Concluído" ? "status-concluido" : "status-em-analise";
+                    } else {
+                        resultado.textContent = "Código não encontrado.";
+                        resultado.className = "";
+                    }
+                })
+                .catch(() => {
+                    resultado.textContent = "Erro ao consultar o status.";
+                    resultado.className = "";
+                });
+        });
+    </script>
+
+</body>
+
+=======
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corregedoria – APF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f4f7;
+            color: #0b2540;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            text-align: center;
+            background-color: #061a2b;
+            padding: 20px 0;
+        }
+        
+        header img {
+            width: 120px;
+        }
+        
+        header h1 {
+            color: #d4af37;
+            margin-top: 10px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        p {
+            text-align: center;
+        }
+        
+        .blocos {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .bloco {
+            background-color: #ffffff;
+            flex: 1;
+            min-width: 280px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .bloco h2 {
+            margin-top: 0;
+            color: #061a2b;
+        }
+        
+        .bloco p {
+            margin: 10px 0 20px 0;
+        }
+        
+        .bloco button {
+            background-color: #d4af37;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .bloco button:hover {
+            background-color: #b8932c;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        
+        textarea {
+            resize: vertical;
+        }
+        
+        #resultado,
+        #codigoGerado {
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .status-em-analise {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-concluido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 15px;
+            background-color: #061a2b;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="https://i.imgur.com/YCT5FTS.png" alt="Brasão da Polícia Federal">
+        <h1>Corregedoria-Geral da Polícia Federal - CGPF</h1>
+    </header>
+
+    <div class="container">
+        <p>A CGPF supervisiona condutas de servidores, garante a disciplina interna e trata denúncias com sigilo e imparcialidade.</p>
+
+        <div class="blocos">
+            <div class="bloco">
+                <h2>Registrar Denúncia</h2>
+                <form id="registrarDenunciaForm">
+                    <input type="text" id="NomeRG" placeholder="Seu nome e RG" required><br>
+                    <input type="text" id="numero" placeholder="Número de celular" required><br>
+                    <textarea id="descricao" rows="4" placeholder="Descrição da denúncia" required></textarea><br>
+                    <textarea id="provas" rows="2" placeholder="Links das Provas (YouTube, Drive, etc)" required></textarea><br>
+                    <button type="submit">Enviar Denúncia</button>
+                </form>
+                <p id="codigoGerado"></p>
+            </div>
+
+            <div class="bloco">
+                <h2>Consultar Status</h2>
+                <form id="consultaDenuncia">
+                    <input type="text" id="codigoConsulta" placeholder="Código da Denúncia" required><br>
+                    <button type="submit">Consultar Status</button>
+                </form>
+                <p id="resultado"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Agência de Polícia Federal — CGPF
+    </footer>
+
+    <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbweBCNj2wkfoVVDpBfppVTtQ4jTHJ_naRk-KDT5yA6hjNx9BstmUWJ8D-wQQQNEMQoW/exec";
+
+        // Enviar denúncia
+        document.getElementById("registrarDenunciaForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            const codigo = "DEN-" + Date.now();
+            const data = new Date().toLocaleString("pt-PT");
+
+            fetch(scriptURL, {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        "Código": codigo,
+                        "Nome": document.getElementById("NomeRG").value,
+                        "Numero": document.getElementById("numero").value,
+                        "Descrição": document.getElementById("descricao").value,
+                        "Provas": document.getElementById("provas").value,
+                        "Status": "Em análise",
+                        "Data": data
+                    })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        document.getElementById("codigoGerado").textContent = "Denúncia enviada com sucesso! Código: " + codigo;
+                        document.getElementById("registrarDenunciaForm").reset();
+                    } else throw new Error("Erro ao enviar");
+                })
+                .catch(() => alert("Erro ao enviar a denúncia. Verifique a ligação ou tente novamente."));
+        });
+
+        // Consultar status
+        document.getElementById("consultaDenuncia").addEventListener("submit", e => {
+            e.preventDefault();
+            const codigo = document.getElementById("codigoConsulta").value.trim().toUpperCase();
+            const resultado = document.getElementById("resultado");
+            resultado.textContent = "A consultar...";
+
+            fetch(scriptURL + "?codigo=" + codigo)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.status) {
+                        resultado.textContent = "Status da denúncia: " + data.status;
+                        resultado.className = data.status === "Concluído" ? "status-concluido" : "status-em-analise";
+                    } else {
+                        resultado.textContent = "Código não encontrado.";
+                        resultado.className = "";
+                    }
+                })
+                .catch(() => {
+                    resultado.textContent = "Erro ao consultar o status.";
+                    resultado.className = "";
+                });
+        });
+    </script>
+
+</body>
+
+>>>>>>> 0afbf186882a5592f8f5731d13ddc6eb16e15901
+</html>
